@@ -1,0 +1,50 @@
+import sqlite3
+connect = sqlite3.connect("prozhe.db")
+while True:
+    dastur = int(input("please enter a request:\nfor install contacts press (0)\nfor create new contact press (1)\nfor remove a contact press (2)\nsearch for a contact press (3)\nfor get contacts list press (4)\nexit press (5)\n"))
+    if dastur == 0:
+        query = "create table contacts (first_name text,last_name text,number int)"
+        cursor = connect.cursor()
+        cursor.execute(query)
+        connect.commit()
+    elif dastur == 1:
+        first_name = input("enter a first name:\n")
+        last_name = input("enter a last name:\n")
+        number = int(input("enter a number:\n"))
+        query = f"insert into contacts values('{first_name}','{last_name}',{number})"
+        cursor = connect.cursor()
+        cursor.execute(query)
+        connect.commit()
+    elif dastur == 2:
+        hazf = input("who do you want to remove?\n")
+        query = f"delete from contacts where first_name = '{hazf}' or last_name = '{hazf}'"
+        cursor = connect.cursor()
+        cursor.execute(query)
+        connect.commit()
+    elif dastur == 3:
+        search_way = int(input("for search by first name or last name please press 1,for search by number please press 2:\n"))
+        if search_way == 1:
+            search = input("please enter a first name or last name:\n")
+            query = f"select * from contacts where first_name = '{search}' or last_name = '{search}'"
+        elif search_way == 2:
+            search = int(input("please enter a number:\n"))
+            query = f"select * from contacts where number = {search}"
+        cursor = connect.cursor()
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        for row in rows:
+            for i in row:
+                if i == search:
+                    continue
+                print(i)
+        connect.commit()
+    elif dastur == 4:
+        query = 'select * from contacts'
+        cursor = connect.cursor()
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        for row in rows:
+            print(row)
+        connect.commit()
+    elif dastur == 5:
+        break
